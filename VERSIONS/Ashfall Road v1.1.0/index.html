@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ashfall Road — A Text RPG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <header id="header">
+    <div class="header-left">
+      <div class="header-emblem">&#9876;</div>
+      <div class="header-titles">
+        <h1 class="game-title">Ashfall Road</h1>
+        <p class="game-subtitle" id="location-subtitle">A Wanderer's Journal</p>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="hp-wrap" title="Health">
+        <span class="label">HP</span>
+        <div class="bar hp-bar"><div class="bar-fill hp-fill" id="hp-fill"></div></div>
+        <span class="bar-text" id="hp-text">30 / 30</span>
+      </div>
+      <div class="stat-chip" title="Level">
+        <span class="chip-label">LV</span><span id="level-text">1</span>
+      </div>
+      <div class="stat-chip gold-chip" title="Gold">
+        <span class="coin">&#9670;</span><span id="gold-text">50</span>
+      </div>
+    </div>
+    <button class="ghost-btn" id="settings-toggle" data-action="open-settings" title="Settings">&#9881;&#65039; Settings</button>
+    <button class="ghost-btn" id="inventory-toggle" data-action="toggle-inventory">Satchel</button>
+  </header>
+
+  <main id="main">
+    <aside id="char-panel" class="ornate-panel">
+      <div class="char-sigil"><span id="char-initial">W</span></div>
+      <h2 id="char-name">The Wanderer</h2>
+      <p class="char-level-line" title="Your overall experience. Higher levels raise all your base stats.">Level <span id="char-level">1</span></p>
+
+      <div class="xp-wrap" title="Experience earned from defeating enemies. Fill the bar to gain a level.">
+        <div class="bar xp-bar"><div class="bar-fill xp-fill" id="char-xp-fill"></div></div>
+        <span class="bar-text small" id="char-xp-text">0 / 20 XP</span>
+      </div>
+
+      <div class="mana-wrap" id="mana-wrap" style="display:none;" title="Spent to cast spells. Regenerates slowly on its own, or instantly with a mana potion.">
+        <div class="bar mana-bar"><div class="bar-fill mana-fill" id="char-mana-fill"></div></div>
+        <span class="bar-text small" id="char-mana-text">0 / 0 MP</span>
+      </div>
+
+      <div class="ability-wrap" id="ability-wrap">
+        <div class="bar ability-bar"><div class="bar-fill ability-fill" id="char-ability-fill"></div></div>
+        <span class="bar-text small" id="char-ability-text">Ability</span>
+      </div>
+
+      <div class="stat-rows">
+        <div class="stat-row" title="How hard you hit. Higher Attack means more damage dealt with weapon strikes and most spells.">
+          <span class="stat-icon">&#9876;</span><span class="stat-name">Attack</span><span class="stat-value" id="stat-atk">5</span>
+        </div>
+        <div class="stat-row" title="How well you shrug off hits. Higher Defense reduces the damage you take from enemy attacks.">
+          <span class="stat-icon">&#128737;</span><span class="stat-name">Defense</span><span class="stat-value" id="stat-def">2</span>
+        </div>
+        <div class="stat-row" title="How quick you are on your feet. Higher Speed improves your odds of fleeing combat successfully.">
+          <span class="stat-icon">&#10148;</span><span class="stat-name">Speed</span><span class="stat-value" id="stat-spd">5</span>
+        </div>
+        <div class="stat-row" title="The most health you can have. If your HP reaches 0 in combat, you fall and wake up back in Millhaven.">
+          <span class="stat-icon">&#10084;</span><span class="stat-name">Max HP</span><span class="stat-value" id="stat-maxhp">30</span>
+        </div>
+      </div>
+
+      <div class="equip-section">
+        <p class="section-label">Equipped</p>
+        <button class="equip-slot" id="eq-weapon" data-action="open-slot" data-slot="weapon">
+          <span class="slot-icon">&#9876;</span>
+          <span class="slot-text">
+            <span class="slot-title">Weapon</span>
+            <span class="slot-item">— none —</span>
+          </span>
+        </button>
+        <button class="equip-slot" id="eq-armor" data-action="open-slot" data-slot="armor">
+          <span class="slot-icon">&#128737;</span>
+          <span class="slot-text">
+            <span class="slot-title">Armor</span>
+            <span class="slot-item">— none —</span>
+          </span>
+        </button>
+        <button class="equip-slot" id="eq-trinket" data-action="open-slot" data-slot="trinket">
+          <span class="slot-icon">&#128142;</span>
+          <span class="slot-text">
+            <span class="slot-title">Trinket</span>
+            <span class="slot-item">— none —</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="buffs-section">
+        <p class="section-label">Active Effects</p>
+        <div id="buffs-list" class="buffs-list">
+          <p class="empty-note">No active effects.</p>
+        </div>
+      </div>
+    </aside>
+
+    <section id="scene-panel" class="ornate-panel">
+      <div id="scene-content"><!-- populated by game.js --></div>
+    </section>
+  </main>
+
+  <footer id="journal">
+    <p class="journal-label">Journal</p>
+    <div id="journal-log"></div>
+  </footer>
+
+</div>
+
+<div id="inventory-drawer" class="drawer">
+  <div class="drawer-header">
+    <h2>Satchel</h2>
+    <button class="ghost-btn" id="close-inventory" data-action="toggle-inventory">Close</button>
+  </div>
+  <div id="inventory-content" class="drawer-content"><!-- populated by game.js --></div>
+</div>
+
+<div id="drawer-backdrop" data-action="toggle-inventory"></div>
+
+<div id="settings-modal" class="modal">
+  <div class="drawer-header">
+    <h2>Settings</h2>
+    <button class="ghost-btn" data-action="close-settings">Close</button>
+  </div>
+  <div id="settings-content" class="drawer-content"><!-- populated by game.js --></div>
+</div>
+
+<div id="modal-backdrop" data-action="close-settings"></div>
+
+<input type="file" id="import-file-input" accept="application/json,.json" style="display:none;">
+
+<script src="game.js"></script>
+</body>
+</html>
